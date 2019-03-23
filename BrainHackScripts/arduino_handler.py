@@ -12,7 +12,7 @@ class ArduinoCommHandler:
             self.serial_obj.open()
             print("Starting Communication with {} at {}."
                   .format(self.serial_obj.port, self.serial_obj.baudrate))
-        except e:
+        except Exception as e:
             print("WARNING: Impossible to communicate with {} at {}."
                   .format(self.serial_obj.port, self.serial_obj.baudrate))
             print(e)
@@ -25,7 +25,7 @@ class ArduinoCommHandler:
         b_array = bytearray(values_array)
         if self.serial_obj.isOpen():
             self.serial_obj.write(b_array)
-            print("Sending...")
+            # print("Sending...")
             # print(b_array)
         else:
-            print(values_array)
+            print(len(values_array))
