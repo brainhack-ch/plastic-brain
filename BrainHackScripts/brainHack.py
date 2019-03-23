@@ -148,4 +148,4 @@ if __name__ == '__main__':
         arduino.send_led_values(leds_values)
 
         last_ts = tslist[-1]
-        tm.sleep_atleast(0.03333)
+        tm.sleep_atleast(0.05)
