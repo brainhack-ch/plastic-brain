@@ -28,6 +28,11 @@ def normalize_array(input_array):
     range_value = max_value - min_value
     return (input_array - min_value) / range_value
 
+def normalize_array_with_min_max(input_array, max_value, min_value):
+    # max_value = input_array.max()
+    # min_value = input_array.min()
+    range_value = max_value - min_value
+    return (input_array - min_value) / range_value
 
 if __name__ == '__main__':
     brainhack = BrainHackEEGProcessing(sampling_frequency=300,
@@ -85,7 +90,7 @@ if __name__ == '__main__':
         brainhack.convert_mne_back_to_np_array()
         brainhack.multiply_inverse_solution()
 
-        window = brainhack.big_array_with_a_lot_of_sources # shape 5004x300
+        window = brainhack.sources # shape 5004x300
         window = window[leds_csv_sources, :] # Shape 191x300
 
         # Computing the power spectrum density using multitapers
@@ -100,16 +105,16 @@ if __name__ == '__main__':
 
         alpha_normalized = normalize_array(alpha_average_power) * 255
         alpha_normalized = alpha_normalized.astype(np.uint8)
-
-        leds_values = [127] * 191
-        leds_values[leds_values_index_for_test] = 255
-        leds_values[leds_values_index_for_test-1] = 255
-        leds_values[leds_values_index_for_test-2] = 127
-        leds_values[leds_values_index_for_test-3] = 0
-        leds_values[leds_values_index_for_test-4] = 0
-        leds_values_index_for_test = leds_values_index_for_test + 1
-        if leds_values_index_for_test >= 191:
-            leds_values_index_for_test = 0
+        leds_values = list(alpha_normalized)
+        # leds_values = [127] * 191
+        # leds_values[leds_values_index_for_test] = 255
+        # leds_values[leds_values_index_for_test-1] = 255
+        # leds_values[leds_values_index_for_test-2] = 127
+        # leds_values[leds_values_index_for_test-3] = 0
+        # leds_values[leds_values_index_for_test-4] = 0
+        # leds_values_index_for_test = leds_values_index_for_test + 1
+        # if leds_values_index_for_test >= 191:
+            # leds_values_index_for_test = 0
         # leds_values = list(np.random.randint(0, 255, 191))
         arduino.send_led_values(leds_values)
 

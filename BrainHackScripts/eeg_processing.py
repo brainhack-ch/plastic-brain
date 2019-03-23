@@ -10,7 +10,11 @@ class BrainHackEEGProcessing:
         self.eeg_ch_names = eeg_ch_names
         self.window_signal = None
         self.raw = None
-        self.big_array_with_a_lot_of_sources = None
+        self.sources = None
+        self.inverse_solution_matrix = np.load(
+            './BrainHackScripts/inverse_solution_matrix.npy'
+        )
+        self.asdasd = None
 
     def remove_unused_channels(self, unused_channels):
         new_index_list = list(range(len(self.eeg_ch_names)))
@@ -44,6 +48,8 @@ class BrainHackEEGProcessing:
     def multiply_inverse_solution(self):
         # qnt_sources = 5004
         # self.window_signal # 19 ch x 300 p
-        # self.big_array_with_a_lot_of_sources # 5004 ch x 300 p
-        self.big_array_with_a_lot_of_sources = self.window_signal
-        self.big_array_with_a_lot_of_sources = np.zeros((5004, 300))
+        # self.sources # 5004 ch x 300 p
+        self.sources = np.dot(
+            self.window_signal.T, self.inverse_solution_matrix
+        ).T
+        return self.sources
