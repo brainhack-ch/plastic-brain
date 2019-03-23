@@ -32,6 +32,7 @@ if __name__ == '__main__':
     brainhack = BrainHackEEGProcessing(sampling_frequency=300,
                                        eeg_ch_names=EEG_CH_NAMES.copy())
     arduino = ArduinoCommHandler(port_name='/dev/ttyACM0', baudrate=115200)
+    arduino.start_communication()
     leds_values = [0] * 191
     leds_values_index_for_test = 0
 
@@ -49,7 +50,7 @@ if __name__ == '__main__':
     tm = qc.Timer(autoreset=True)
     trg_ch = sr.get_trigger_channel()
     last_ts = 0
-    qc.print_c('Trigger channel: %d' % trg_ch, 'G')
+    # qc.print_c('Trigger channel: %d' % trg_ch, 'G')
 
     fmin = 1
     fmax = 40
@@ -99,9 +100,9 @@ if __name__ == '__main__':
         alpha_normalized = alpha_normalized.astype(np.uint8)
 
         leds_values = [0] * 191
-        leds_values[leds_values_index_for_test] = 255
-        leds_values_index_for_test = leds_values_index_for_test > 1
-        if leds_values_index_for_test > 191:
+        leds_values[leds_values_index_for_test] = 99
+        leds_values_index_for_test = leds_values_index_for_test + 1
+        if leds_values_index_for_test >= 191:
             leds_values_index_for_test = 0
         arduino.send_led_values(leds_values)
 
