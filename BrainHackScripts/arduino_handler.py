@@ -25,7 +25,7 @@ class ArduinoCommHandler:
         b_array = bytearray(values_array)
         if self.serial_obj.isOpen():
             self.serial_obj.write(b_array)
-            print("Sending...")
+            # print("Sending...")
             # print(b_array)
         else:
             print(len(values_array))

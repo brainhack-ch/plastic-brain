@@ -16,8 +16,8 @@ EEG_CH_NAMES = [
 
 window_max_power = 0
 window_min_power = 0
-last_max_values = np.zeros(5000)
-last_min_values = np.zeros(5000)
+last_max_values = []
+last_min_values = []
 qnt_max_values = 0
 qnt_min_values = 0
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     # qc.print_c('Trigger channel: %d' % trg_ch, 'G')
 
     fmin = 1
-    fmax = 40
+    fmax = 47
     psde = mne.decoding.PSDEstimator(
         sfreq=sfreq, fmin=fmin, fmax=fmax, bandwidth=None,
         adaptive=False, low_bias=True, n_jobs=1,
@@ -100,16 +100,36 @@ if __name__ == '__main__':
         # channels x frequencies
         psd = psd.reshape((psd.shape[1], psd.shape[2]))
 
-        alpha_average_power = psd[:, 6:13].mean(1)
+        alpha_average_power = psd[:, 8:12].mean(1)
         # beta_average_power = psd[:, 13:40].mean(1)
+        print(alpha_average_power.mean())
 
-        print("max: %.4f, min: %.4f" % (
-            alpha_average_power.max(), alpha_average_power.min()
+        last_max_values.append(alpha_average_power.max())
+        if len(last_max_values) > 1000:
+            last_max_values.pop(0)
+
+        last_min_values.append(alpha_average_power.min())
+        if len(last_min_values) > 1000:
+            last_min_values.pop(0)
+
+        max = np.mean(last_max_values) + np.std(last_max_values)
+        min = np.mean(last_min_values) - np.std(last_min_values)
+
+        print("max: %.4f, min: %.4f -- mean_max: %.4f, mean_min: %.4f" % (
+            alpha_average_power.max(), alpha_average_power.min(),
+            max, min
         ))
+
         # alpha_normalized = normalize_array(alpha_average_power) * 255
+
+        # alpha_normalized = normalize_array_with_min_max(
+        #     alpha_average_power, max_value=max, min_value=min
+        # ) * 255
+
         alpha_normalized = normalize_array_with_min_max(
-            alpha_average_power, max_value=0.0500, min_value=0
+            alpha_average_power, max_value=0.015, min_value=0.01
         ) * 255
+
 
         alpha_normalized[alpha_normalized>255] = 255
         alpha_normalized[alpha_normalized<0] = 0
@@ -128,4 +148,4 @@ if __name__ == '__main__':
         arduino.send_led_values(leds_values)
 
         last_ts = tslist[-1]
-        tm.sleep_atleast(0.05)
+        tm.sleep_atleast(0.03333)
