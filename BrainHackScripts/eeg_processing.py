@@ -42,4 +42,8 @@ class BrainHackEEGProcessing:
         return self.window_signal
 
     def multiply_inverse_solution(self):
+        # qnt_sources = 5004
+        # self.window_signal # 19 ch x 300 p
+        # self.big_array_with_a_lot_of_sources # 5004 ch x 300 p
         self.big_array_with_a_lot_of_sources = self.window_signal
+        self.big_array_with_a_lot_of_sources = np.zeros((5004, 300))
