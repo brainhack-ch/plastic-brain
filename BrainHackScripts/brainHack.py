@@ -5,6 +5,7 @@ import numpy as np
 from pycnbi.utils import pycnbi_utils as pu
 from pycnbi.stream_receiver.stream_receiver import StreamReceiver
 from eeg_processing import BrainHackEEGProcessing
+from arduino_handler import ArduinoCommHandler
 
 EEG_CH_NAMES = [
     'TRIGGER', 'P3', 'C3', 'F3', 'Fz', 'F4', 'C4', 'P4', 'Cz', 'Pz',
@@ -30,6 +31,11 @@ def normalize_array(input_array):
 if __name__ == '__main__':
     brainhack = BrainHackEEGProcessing(sampling_frequency=300,
                                        eeg_ch_names=EEG_CH_NAMES.copy())
+    arduino = ArduinoCommHandler(port_name='/dev/ttyACM0', baudrate=115200)
+    arduino.start_communication()
+    leds_values = [0] * 191
+    leds_values_index_for_test = 0
+
     mne.set_log_level('ERROR')
     # actually improves performance for multitaper
     os.environ['OMP_NUM_THREADS'] = '1'
@@ -44,7 +50,7 @@ if __name__ == '__main__':
     tm = qc.Timer(autoreset=True)
     trg_ch = sr.get_trigger_channel()
     last_ts = 0
-    qc.print_c('Trigger channel: %d' % trg_ch, 'G')
+    # qc.print_c('Trigger channel: %d' % trg_ch, 'G')
 
     fmin = 1
     fmax = 40
@@ -92,6 +98,13 @@ if __name__ == '__main__':
 
         alpha_normalized = normalize_array(alpha_average_power) * 255
         alpha_normalized = alpha_normalized.astype(np.uint8)
+
+        leds_values = [0] * 191
+        leds_values[leds_values_index_for_test] = 99
+        leds_values_index_for_test = leds_values_index_for_test + 1
+        if leds_values_index_for_test >= 191:
+            leds_values_index_for_test = 0
+        arduino.send_led_values(leds_values)
 
         last_ts = tslist[-1]
         tm.sleep_atleast(0.05)
