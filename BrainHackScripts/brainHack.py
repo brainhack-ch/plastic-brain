@@ -6,6 +6,7 @@ from pycnbi.utils import pycnbi_utils as pu
 from pycnbi.stream_receiver.stream_receiver import StreamReceiver
 from eeg_processing import BrainHackEEGProcessing
 from arduino_handler import ArduinoCommHandler
+from leds_csv_index import leds_csv_sources
 
 EEG_CH_NAMES = [
     'TRIGGER', 'P3', 'C3', 'F3', 'Fz', 'F4', 'C4', 'P4', 'Cz', 'Pz',
@@ -85,6 +86,7 @@ if __name__ == '__main__':
         brainhack.multiply_inverse_solution()
 
         window = brainhack.big_array_with_a_lot_of_sources
+        window = brainhack.big_array_with_a_lot_of_sources
 
         # Computing the power spectrum density using multitapers
         psd = psde.transform(
@@ -100,10 +102,11 @@ if __name__ == '__main__':
         alpha_normalized = alpha_normalized.astype(np.uint8)
 
         leds_values = [0] * 191
-        leds_values[leds_values_index_for_test] = 99
+        leds_values[leds_values_index_for_test] = 255
         leds_values_index_for_test = leds_values_index_for_test + 1
         if leds_values_index_for_test >= 191:
             leds_values_index_for_test = 0
+        # leds_values =list(np.random.randint(0, 255, 191))
         arduino.send_led_values(leds_values)
 
         last_ts = tslist[-1]
