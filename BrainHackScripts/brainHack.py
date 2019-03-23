@@ -75,8 +75,8 @@ if __name__ == '__main__':
         tsnew = np.where(np.array(tslist) > last_ts)[0][0]
         trigger = np.unique(window[trg_ch, tsnew:])
 
-        if len(trigger) > 0:
-            qc.print_c('Triggers: %s' % np.array(trigger), 'G')
+        # if len(trigger) > 0:
+            # qc.print_c('Triggers: %s' % np.array(trigger), 'G')
 
         # print('[%.1f] Receiving data...' % watchdog.sec())
 
@@ -103,7 +103,16 @@ if __name__ == '__main__':
         alpha_average_power = psd[:, 6:13].mean(1)
         # beta_average_power = psd[:, 13:40].mean(1)
 
-        alpha_normalized = normalize_array(alpha_average_power) * 255
+        print("max: %.4f, min: %.4f" % (
+            alpha_average_power.max(), alpha_average_power.min()
+        ))
+        # alpha_normalized = normalize_array(alpha_average_power) * 255
+        alpha_normalized = normalize_array_with_min_max(
+            alpha_average_power, max_value=0.0500, min_value=0
+        ) * 255
+
+        alpha_normalized[alpha_normalized>255] = 255
+        alpha_normalized[alpha_normalized<0] = 0
         alpha_normalized = alpha_normalized.astype(np.uint8)
         leds_values = list(alpha_normalized)
         # leds_values = [127] * 191
