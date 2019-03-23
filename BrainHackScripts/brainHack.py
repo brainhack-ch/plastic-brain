@@ -86,7 +86,7 @@ if __name__ == '__main__':
         brainhack.multiply_inverse_solution()
 
         window = brainhack.big_array_with_a_lot_of_sources
-        window = brainhack.big_array_with_a_lot_of_sources
+        window = window[leds_csv_sources]
 
         # Computing the power spectrum density using multitapers
         psd = psde.transform(
@@ -101,8 +101,12 @@ if __name__ == '__main__':
         alpha_normalized = normalize_array(alpha_average_power) * 255
         alpha_normalized = alpha_normalized.astype(np.uint8)
 
-        leds_values = [0] * 191
+        leds_values = [127] * 191
         leds_values[leds_values_index_for_test] = 255
+        leds_values[leds_values_index_for_test-1] = 190
+        leds_values[leds_values_index_for_test-2] = 127
+        leds_values[leds_values_index_for_test-3] = 60
+        leds_values[leds_values_index_for_test-4] = 0
         leds_values_index_for_test = leds_values_index_for_test + 1
         if leds_values_index_for_test >= 191:
             leds_values_index_for_test = 0

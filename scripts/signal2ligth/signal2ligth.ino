@@ -86,7 +86,22 @@ void loop() {
         while (!Serial.available()); // Wait the buffer
         led_value_from_0_to_255 = Serial.read();
         //led_tab[i] = colors[led_value_from_0_to_255];
-        led_tab[i] = strip.Color(255 - led_value_from_0_to_255, led_value_from_0_to_255, 0);
+        //led_tab[i] = strip.Color(255 - led_value_from_0_to_255, led_value_from_0_to_255, 0);
+
+        if (led_value_from_0_to_255 > 127) {
+          led_tab[i] = strip.Color(
+                         0,
+                         255 - int((255-led_value_from_0_to_255/2)),
+                         0
+                       );
+        } else {
+          led_tab[i] = strip.Color(
+                         255 - led_value_from_0_to_255*2,
+                         0,
+                         0
+                       );
+        }
+
       }
       // reading = '0';
       digitalWrite(LED_BUILTIN, status_led); status_led = !status_led;
