@@ -1,7 +1,20 @@
-import mne
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+PlasticBrain EEG processing module. Filters and projects EEG signal onto sources (inverse problem)
+
+Developed at the 2019 Brainhack Geneva event for the PlasticBrain project.
+Participants : Manik Bhattacharjee,Victor Ferat, Italo Fernandes, Jelena, Gaetan, Elif, Jorge
+
+Original project by Manik Bhattacharjee and Pierre Deman
+
+"""
+
 import numpy as np
 import scipy.fftpack as fftpack
 from scipy.signal import butter, lfilter, freqz, filtfilt
+import mne
 
 
 class BrainHackEEGProcessing:
