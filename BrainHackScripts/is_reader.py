@@ -56,7 +56,8 @@ def read_is(fname):
     return(n_channel, numsolutionpoints, numregularizations, isinversescalar, regularisation_solutions)
 
 if __name__ == '__main__':
-    f = open("../Inverse Solution/MniNlinasyma/MniNlinasyma.Loreta.is", "rb")
+    f = open("./Inverse Solution/MniNlinasyma/MniNlinasyma.Loreta.is", "rb")
     n_channel, numsolutionpoints, numregularizations, isinversescalar, regularisation_solutions = read_is(f)
     print(n_channel, numsolutionpoints, numregularizations, isinversescalar)
     print(len(regularisation_solutions))
+

@@ -14,7 +14,7 @@ Original project by Manik Bhattacharjee and Pierre Deman
 from pycnbi.stream_player.stream_player import stream_player
 import os
 
-fif_file = r'./Recordings/brainHackTestClosed.fif'
+fif_file = r'./Recordings/brainHackTestOpen.fif'
 
 if os.name == 'nt':  # nt -> Windows and posix -> Linux
     print("Running on windows system")

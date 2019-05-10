@@ -11,10 +11,10 @@ Original project by Manik Bhattacharjee and Pierre Deman
 
 """
 
+import mne
 import numpy as np
 import scipy.fftpack as fftpack
 from scipy.signal import butter, lfilter, freqz, filtfilt
-import mne
 
 
 class BrainHackEEGProcessing:
@@ -23,7 +23,11 @@ class BrainHackEEGProcessing:
         self.eeg_ch_names = eeg_ch_names
         self.window_signal = None
         self.raw = None
-        self.big_array_with_a_lot_of_sources = None
+        self.sources = None
+        self.inverse_solution_matrix = np.load(
+            './BrainHackScripts/inverse_solution_matrix.npy'
+        )
+        self.asdasd = None
 
     def remove_unused_channels(self, unused_channels):
         new_index_list = list(range(len(self.eeg_ch_names)))
@@ -55,4 +59,11 @@ class BrainHackEEGProcessing:
         return self.window_signal
 
     def multiply_inverse_solution(self):
-        self.big_array_with_a_lot_of_sources = self.window_signal
+        # qnt_sources = 5004
+        # self.window_signal # 19 ch x 300 p
+        # self.sources # 5004 ch x 300 p
+        self.sources = np.dot(
+            self.window_signal.T, self.inverse_solution_matrix
+        ).T
+        return self.sources
+
