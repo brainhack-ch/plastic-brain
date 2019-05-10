@@ -21,6 +21,7 @@ from eeg_processing import BrainHackEEGProcessing
 from arduino_handler import ArduinoCommHandler
 from leds_csv_index import leds_csv_sources
 
+# EEG Channel names
 EEG_CH_NAMES = [
     'TRIGGER', 'P3', 'C3', 'F3', 'Fz', 'F4', 'C4', 'P4', 'Cz', 'Pz',
     'Fp1', 'Fp2', 'T3', 'T5', 'O1', 'O2', 'X3', 'X2', 'F7', 'F8', 'X1',
@@ -52,8 +53,11 @@ if __name__ == '__main__':
     # Setup the processing object
     brainhack = BrainHackEEGProcessing(sampling_frequency=300,
                                        eeg_ch_names=EEG_CH_NAMES.copy())
+
+    # Setup the arduino using the first USB port
     arduino = ArduinoCommHandler(port_name='/dev/ttyACM0', baudrate=115200)
     arduino.start_communication()
+    # We have 191 LEDs in the PlasticBrain
     leds_values = [0] * 191
     leds_values_index_for_test = 0
 
@@ -111,6 +115,7 @@ if __name__ == '__main__':
         brainhack.multiply_inverse_solution()
 
         window = brainhack.sources # shape 5004x300
+        # Just keep the sources used for the LEDs
         window = window[leds_csv_sources, :] # Shape 191x300
 
         # Computing the power spectrum density using multitapers
@@ -128,13 +133,14 @@ if __name__ == '__main__':
         print(alpha_average_power.mean())
 
         last_max_values.append(alpha_average_power.max())
-        if len(last_max_values) > 1000:
+        if len(last_max_values) > 1000: # Keep the last 1000 max values
             last_max_values.pop(0)
 
         last_min_values.append(alpha_average_power.min())
-        if len(last_min_values) > 1000:
+        if len(last_min_values) > 1000:# Keep the last 1000 min values
             last_min_values.pop(0)
 
+        # Autoscale alpha values from the history of min and max values
         max = np.mean(last_max_values) + np.std(last_max_values)
         min = np.mean(last_min_values) - np.std(last_min_values)
 
@@ -153,7 +159,7 @@ if __name__ == '__main__':
             alpha_average_power, max_value=0.015, min_value=0.01
         ) * 255
 
-
+        # Convert to bytes (0-255)
         alpha_normalized[alpha_normalized>255] = 255
         alpha_normalized[alpha_normalized<0] = 0
         alpha_normalized = alpha_normalized.astype(np.uint8)
@@ -168,6 +174,8 @@ if __name__ == '__main__':
         # if leds_values_index_for_test >= 191:
             # leds_values_index_for_test = 0
         # leds_values = list(np.random.randint(0, 255, 191))
+
+        # Send byte values to the arduino which will compute the 3-byte RGB color
         arduino.send_led_values(leds_values)
 
         last_ts = tslist[-1] # Last timestamp

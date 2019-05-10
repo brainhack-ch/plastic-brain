@@ -25,7 +25,7 @@ class BrainHackEEGProcessing:
         self.raw = None
         self.sources = None
         self.inverse_solution_matrix = np.load(
-            './BrainHackScripts/inverse_solution_matrix.npy'
+            './BrainHackScripts/inverse_solution_matrix.npy' # Produced by Cartool
         )
         self.asdasd = None
 
