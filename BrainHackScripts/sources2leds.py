@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+PlasticBrain - from the manually entered list of dipole numbers closest to each LED light, get XYZ coordinates
+from Cartool file and attribute it to each LED. Computes a matrix to project the value of sources onto the LED values.
+
+Developed at the 2019 Brainhack Geneva event for the PlasticBrain project, runs on windows with a prerecorded file.
+Participants : Manik Bhattacharjee,Victor Ferat, Italo Fernandes, Jelena, Gaetan, Elif, Jorge
+
+Original project by Manik Bhattacharjee and Pierre Deman
+
+"""
 
 import csv
 import re

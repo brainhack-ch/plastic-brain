@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+PlasticBrain - find and locate electrode in the EEG file from Cartool (.xyz) and the inverse problem.
+
+Developed at the 2019 Brainhack Geneva event for the PlasticBrain project, runs on windows with a prerecorded file.
+Participants : Manik Bhattacharjee,Victor Ferat, Italo Fernandes, Jelena, Gaetan, Elif, Jorge
+
+Original project by Manik Bhattacharjee and Pierre Deman
+
+"""
+
 import csv
 import numpy as np
 

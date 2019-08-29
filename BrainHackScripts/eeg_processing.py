@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+PlasticBrain EEG processing module. Filters and projects EEG signal onto sources (inverse problem)
+
+Developed at the 2019 Brainhack Geneva event for the PlasticBrain project.
+Participants : Manik Bhattacharjee,Victor Ferat, Italo Fernandes, Jelena, Gaetan, Elif, Jorge
+
+Original project by Manik Bhattacharjee and Pierre Deman
+
+"""
+
 import mne
 import numpy as np
 import scipy.fftpack as fftpack
@@ -12,7 +25,7 @@ class BrainHackEEGProcessing:
         self.raw = None
         self.sources = None
         self.inverse_solution_matrix = np.load(
-            './BrainHackScripts/inverse_solution_matrix.npy'
+            './BrainHackScripts/inverse_solution_matrix.npy' # Produced by Cartool
         )
         self.asdasd = None
 
@@ -53,3 +66,4 @@ class BrainHackEEGProcessing:
             self.window_signal.T, self.inverse_solution_matrix
         ).T
         return self.sources
+
