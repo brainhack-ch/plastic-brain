@@ -10,7 +10,6 @@ Participants : Manik Bhattacharjee,Victor Ferat, Italo Fernandes, Jelena, Gaetan
 Original project by Manik Bhattacharjee and Pierre Deman
 
 """
-
 from pycnbi.stream_player.stream_player import stream_player
 import os
 
